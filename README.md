@@ -6,7 +6,7 @@ Each game only uses a few mechanics and is solvable with basic algorithms (eg. _
 
 While there are benchmarks on popular video games (see [vgbench](https://www.vgbench.com/), [lmgame](https://lmgame.org/)), these simple, modular games provide a more sensitive measure of the abilities of current systems. 
 
-You can read a transcript of Claude playing [here](https://github.com/yonadaa/agi-games/blob/main/examples/llm-agents/logs/game-1_claude-sonnet-4-20250514/20250611_152242.txt). 
+You can read a transcript of Claude playing [here](https://github.com/yonadaa/agi-games/blob/main/examples/llm-agents/logs/game-1_claude-sonnet-4-20250514/20250611_161439.txt). 
 
 ## Testing
 
