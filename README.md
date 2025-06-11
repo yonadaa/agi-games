@@ -10,7 +10,7 @@ You can read a transcript of Claude playing [here](https://github.com/yonadaa/ag
 
 ## Testing
 
-The games are played on a fixed-sized canvas via a web interface:
+The games are played on a fixed-sized canvas through a web interface:
 
 <img width="1470" alt="Screenshot 2025-06-11 at 11 48 05" src="https://github.com/user-attachments/assets/e0737392-c0ee-469b-8ff0-e54b58b1b00b"/>
 
@@ -26,7 +26,7 @@ python -m http.server 8000
 
 ## Example solutions
 
-The `examples/` folder has scripts for playing the games with `claude-sonnet-4` and `gemini-2.5-flash`. They are LangGraph [agents](https://www.langchain.com/agents) and have tools to take a screenshot and press keys with [PlayWright](https://playwright.dev/).
+The `examples/` folder has scripts for playing the games with `claude-sonnet-4` and `gemini-2.5-flash`. They are LangGraph [agents](https://www.langchain.com/agents) and have tools to take a screenshot and press keys with [Playwright](https://playwright.dev/).
 
 Test the agents with:
 ```
