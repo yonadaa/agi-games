@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Play</title>
+    <style>
+      body {
+        margin: 0;
+        background-color: #313131;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
+        padding: 20px;
+        box-sizing: border-box;
+      }
+
+      canvas {
+        cursor: pointer;
+        flex: 1;
+        max-width: 500px;
+        max-height: 500px;
+      }
+
+      div {
+        font-size: 32px;
+        color: white;
+      }
+
+      .game-selector {
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      }
+
+      .nav-button {
+        padding: 15px 20px;
+        font-size: 16px;
+        color: white;
+        background-color: #5d5d5d;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        min-width: 120px;
+      }
+
+      .nav-button:hover {
+        background-color: #444444;
+      }
+
+      .nav-button:disabled {
+        background-color: #101010;
+        cursor: not-allowed;
+      }
+
+      .game-counter {
+        font-size: 24px;
+        color: white;
+        font-weight: bold;
+      }
+
+      .title-bar {
+        font-size: 48px;
+        color: white;
+        font-weight: bold;
+        margin-bottom: 30px;
+        text-align: center;
+      }
+
+      .canvas-container {
+        position: relative;
+        display: inline-block;
+      }
+
+      #won-div {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: #00ff00;
+        font-size: 48px;
+        font-weight: bold;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        z-index: 10;
+        pointer-events: none;
+      }
+
+      .help-icon {
+        display: inline-block;
+        width: 30px;
+        height: 30px;
+        background-color: #666;
+        color: white;
+        border-radius: 50%;
+        text-align: center;
+        line-height: 30px;
+        font-size: 20px;
+        font-weight: bold;
+        cursor: help;
+        margin-left: 10px;
+        position: relative;
+      }
+
+      .help-icon:hover {
+        background-color: #888;
+      }
+
+      .tooltip {
+        visibility: hidden;
+        width: 350px;
+        background-color: #333;
+        color: white;
+        text-align: left;
+        border-radius: 6px;
+        padding: 15px;
+        position: absolute;
+        z-index: 1000;
+        top: 125%;
+        left: 50%;
+        margin-left: -175px;
+        opacity: 0;
+        transition: opacity 0.3s;
+        font-size: 16px;
+        line-height: 1.4;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      }
+
+      .tooltip::after {
+        content: "";
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        margin-left: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: transparent transparent #333 transparent;
+      }
+
+      .help-icon:hover .tooltip {
+        visibility: visible;
+        opacity: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="title-bar">agi-games</div>
+
+    <div class="game-selector">
+      <button id="prevButton" class="nav-button">Previous</button>
+      <div class="game-counter">
+        <span id="currentGameNum">1</span> of <span id="totalGames">3</span>
+      </div>
+      <button id="nextButton" class="nav-button">Next</button>
+      <div class="help-icon">
+        ?
+        <div class="tooltip">
+          Tasks that test your general intelligence. For each game, experiment
+          with the keyboard and mouse, figure out how to play, and try win!
+        </div>
+      </div>
+    </div>
+
+    <div class="canvas-container">
+      <canvas id="game-canvas" width="500" height="500"></canvas>
+      <div id="won-div"></div>
+    </div>
+
+    <script type="module">
+      import { game1 } from "./games/1.js";
+      import { game2 } from "./games/2.js";
+      import { game3 } from "./games/3.js";
+
+      const games = { 1: game1, 2: game2, 3: game3 };
+      let currentGameCleanup = null;
+      let currentGameNumber = 1;
+      const totalGames = 3;
+
+      function updateGameCounter() {
+        document.getElementById("currentGameNum").textContent =
+          currentGameNumber;
+        document.getElementById("prevButton").disabled =
+          currentGameNumber === 1;
+        document.getElementById("nextButton").disabled =
+          currentGameNumber === totalGames;
+      }
+
+      function startGame(gameNumber) {
+        if (currentGameCleanup) {
+          currentGameCleanup.destroy();
+          document.getElementById("won-div").textContent = "";
+        }
+        const game = games[gameNumber];
+        if (game) {
+          const canvas = document.getElementById("game-canvas");
+          const declareWin = () =>
+            (document.getElementById("won-div").textContent = "You win!");
+
+          currentGameCleanup = game(canvas, declareWin);
+        }
+        currentGameNumber = gameNumber;
+        updateGameCounter();
+      }
+
+      function setGameUrl(gameNumber) {
+        const url = new URL(window.location);
+        url.searchParams.set("game", gameNumber.toString());
+        window.history.replaceState({}, "", url);
+        startGame(gameNumber);
+      }
+
+      // Check URL parameter on page load
+      const urlParams = new URLSearchParams(window.location.search);
+      const gameParam = parseInt(urlParams.get("game")) || 1;
+
+      startGame(gameParam);
+
+      // Add event listeners for navigation buttons
+      document
+        .getElementById("prevButton")
+        .addEventListener("click", function () {
+          if (currentGameNumber > 1) {
+            setGameUrl(currentGameNumber - 1);
+          }
+        });
+
+      document
+        .getElementById("nextButton")
+        .addEventListener("click", function () {
+          if (currentGameNumber < totalGames) {
+            setGameUrl(currentGameNumber + 1);
+          }
+        });
+    </script>
+  </body>
+</html>
