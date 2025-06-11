@@ -16,14 +16,14 @@ async def main():
     games = range(1, NUM_GAMES + 1)
 
     llms = [
-        # ChatAnthropic(
-        #     model="claude-sonnet-4-20250514",
-        #     max_tokens=5000,
-        #     thinking={
-        #         "type": "enabled",
-        #         "budget_tokens": 1024,
-        #     },
-        # ),
+        ChatAnthropic(
+            model="claude-sonnet-4-20250514",
+            max_tokens=5000,
+            thinking={
+                "type": "enabled",
+                "budget_tokens": 1024,
+            },
+        ),
         ChatGoogleGenerativeAI(
             model="gemini-2.5-flash-preview-04-17",
             thinking_budget=1024,

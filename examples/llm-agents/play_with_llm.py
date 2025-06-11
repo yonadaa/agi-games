@@ -87,7 +87,7 @@ async def play_with_llm(page: Page, llm, game_id):
 
                 # Write to file
                 f.write(f"[{datetime.datetime.now().strftime('%H:%M:%S')}] ")
-                f.write(f"Role: message.type\n")
+                f.write(f"Role: {message.type}\n")
 
                 content = message.content
                 # Truncate any screenshot responses
